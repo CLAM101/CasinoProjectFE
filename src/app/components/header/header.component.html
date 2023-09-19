@@ -2,13 +2,13 @@
     
     
 <div class="connect-wallet">
-<button  mat-raised-button color="accent" >Connect Wallet</button> 
+<button (click)="connectWallet()" mat-raised-button color="accent" >Connect Wallet</button> 
 </div>
 <div class="start-game">
 <button  mat-raised-button color="accent" >Start A Game</button> 
 </div>
     <div class="get-tokens">
-<button  mat-raised-button color="accent" >Get Some Clam Token</button>
+<button (click)="claimAllocation()"  mat-raised-button color="accent" >Get Some Clam Token</button>
     </div>
      
 </div>

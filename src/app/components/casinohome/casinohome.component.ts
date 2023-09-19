@@ -72,7 +72,6 @@ export class CasinohomeComponent implements OnInit {
   }
 
   async connectWallet() {
-    debugger;
     const walletConenctResponse = await this.provider.send(
       'eth_requestAccounts',
       []
