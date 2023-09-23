@@ -1,14 +1,13 @@
 <div class=main-container>
-    
-    
+<div class="burger">
+<button mat-raised-button color="accent" [matMenuTriggerFor]="menu">Menu</button>
+<mat-menu #menu="matMenu">
+<button (click)="router.navigate(['/casinohome'])"mat-menu-item> Home</button>
+  <button (click)="router.navigate(['/startgame'])" mat-menu-item >Start A Game</button>
+  <button (click)="claimAllocation()"mat-menu-item> Claim Tokens</button>
+</mat-menu>
+</div>
 <div class="connect-wallet">
-<button (click)="connectWallet()" mat-raised-button color="accent" >Connect Wallet</button> 
+    <button mat-raised-button color="accent"  (click)="connectWallet()"  > Connect Wallet</button>
 </div>
-<div class="start-game">
-<button  mat-raised-button color="accent" >Start A Game</button> 
-</div>
-    <div class="get-tokens">
-<button (click)="claimAllocation()"  mat-raised-button color="accent" >Get Some Clam Token</button>
-    </div>
-     
 </div>

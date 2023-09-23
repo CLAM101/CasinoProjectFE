@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-
-import { ChildActivationStart, OnSameUrlNavigation } from '@angular/router';
+import { Router } from '@angular/router';
 import { EthersService } from 'src/app/services/ethersService/ethersService';
 import { ethers } from 'ethers';
 
@@ -25,7 +24,7 @@ export class CasinohomeComponent implements OnInit {
   accounts: Array<string>;
   walletConnected: boolean;
 
-  constructor(private ethersService: EthersService) {}
+  constructor(private ethersService: EthersService, private router: Router) {}
 
   async ngOnInit() {
     this.provider = this.ethersService.getProvider();

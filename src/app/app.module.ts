@@ -7,15 +7,35 @@ import { AppComponent } from './app.component';
 import { CasinohomeComponent } from './components/casinohome/casinohome.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './components/header/header.component';
+import { StartgameComponent } from './components/startgame/startgame.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { GamestartedmodalComponent } from './components/gamestartedmodal/gamestartedmodal.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { walletReducer } from './reducers';
 
 @NgModule({
-  declarations: [AppComponent, CasinohomeComponent, HeaderComponent],
+  declarations: [
+    AppComponent,
+    CasinohomeComponent,
+    HeaderComponent,
+    StartgameComponent,
+    GamestartedmodalComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
     MatButtonModule,
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    StoreModule.forRoot(walletReducer, {}),
   ],
   providers: [],
   bootstrap: [AppComponent],

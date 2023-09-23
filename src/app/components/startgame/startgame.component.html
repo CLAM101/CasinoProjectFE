@@ -1,0 +1,20 @@
+<h1>Start Your Game Here</h1>
+<h2>Please enter the maximum amount of players you would like to join your game</h2>
+
+<form [formGroup]="startGameForm" (ngSubmit)="startGame()" class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Max Players</mat-label>
+    <input placeholder="Max Players" type="text" formControlName="entryFee" matInput>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Entry Fee</mat-label>
+    <input placeholder="Entry Fee" formControlName="maxPlayers"  type="text" matInput>
+  </mat-form-field>
+
+  <button  mat-raised-button color="accent">Start Game</button>
+</form>
+
+
+<ng-container *ngIf="showModal">
+    <app-gamestartedmodal [gameId]="confirmedGameGameId" [maxPlayers]="confirmedGameMaxPlayers"></app-gamestartedmodal>
+</ng-container>

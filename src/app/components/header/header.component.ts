@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EthersService } from 'src/app/services/ethersService/ethersService';
 import { ethers } from 'ethers';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -15,10 +16,10 @@ export class HeaderComponent implements OnInit {
   accounts: Array<string>;
   walletConnected: boolean;
 
-  constructor(private ethersService: EthersService) {}
+  constructor(private ethersService: EthersService, public router: Router) {}
   async ngOnInit(): Promise<void> {
     this.provider = this.ethersService.getProvider();
-    if (await this.checkConnection()) {
+    if (window.ethereum.selectedAddress && window.ethereum.isConnected()) {
       await this.connectContracts();
       const supply = await this.tokenMethodCaller.getCurrentSupply();
       const convertedSupply = ethers.utils.formatUnits(supply, 18);
@@ -29,23 +30,6 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  async checkConnection() {
-    try {
-      const conenctResponse = await this.provider.send(
-        'eth_requestAccounts',
-        []
-      );
-
-      this.walletConnected = true;
-
-      return conenctResponse;
-    } catch (err) {
-      alert('Pleae connect Wallet');
-      this.walletConnected = false;
-      return undefined;
-    }
-  }
-
   async connectContracts() {
     this.tokenContract = this.ethersService.getTokenContract(this.provider);
     this.signer = await this.provider.getSigner();
@@ -53,28 +37,30 @@ export class HeaderComponent implements OnInit {
   }
 
   async claimAllocation() {
-    if (await this.checkConnection()) {
+    if (window.ethereum.selectedAddress) {
       try {
         let tx = await this.tokenMethodCaller.claimAllocation();
-        let confirmation = await tx.wait();
 
-        console.log('tx confirmed', confirmation);
+        let confirmation = await tx.wait();
+        console.log('Confirmation', confirmation);
+        alert('Claim Successful, go join a game!');
       } catch (err) {
-        if (err.reason.includes('Already Claimed')) {
-          alert('Sorry looks like youve already claimed you greedy bastard!!!');
+        if (err.reason?.includes('Already Claimed')) {
+          alert(
+            'Sorry looks like you have already claimed you greedy bastard!!!'
+          );
+        } else {
+          alert(
+            'your transactions has failed please try again or contact us for support'
+          );
         }
       }
+    } else {
+      alert('Please connect wallet');
     }
   }
 
   async connectWallet() {
-    const walletConenctResponse = await this.provider.send(
-      'eth_requestAccounts',
-      []
-    );
-
-    if (walletConenctResponse.length) {
-      this.walletConnected = true;
-    }
+    this.ethersService.connectWallet();
   }
 }
