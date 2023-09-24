@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-gamestartedmodal',
@@ -8,10 +8,17 @@ import { Component, Input, OnInit } from '@angular/core';
 export class GamestartedmodalComponent implements OnInit {
   @Input() gameId: string;
   @Input() maxPlayers: string;
+  @Input() showModal: boolean;
+
+  @Output() closeEvent = new EventEmitter();
+
+  constructor() {}
 
   ngOnInit(): void {}
 
   goToGame() {}
 
-  constructor() {}
+  closeModal() {
+    this.closeEvent.emit(false);
+  }
 }

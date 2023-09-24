@@ -16,7 +16,7 @@ export class StartgameComponent implements OnInit {
 
   confirmedGameGameId: string;
   confirmedGameMaxPlayers: string;
-  confirmedGameEntryFee: number;
+  confirmedGameEntryFee: string;
   showModal = false;
   provider: any;
   casinoContract: any;
@@ -46,6 +46,10 @@ export class StartgameComponent implements OnInit {
     this.casinoMethodCaller = this.casinoContract.connect(this.signer);
   }
 
+  closeModal(event: boolean) {
+    this.showModal = event;
+  }
+
   async startGame() {
     try {
       const startGameTx = await this.casinoMethodCaller.startGame(
@@ -55,17 +59,17 @@ export class StartgameComponent implements OnInit {
 
       const gameStartedConfirmation = await startGameTx.wait();
 
-      console.log(
-        'Game start confirm tx',
-        gameStartedConfirmation.events[0].args.gameId
-      );
-
       this.confirmedGameGameId = ethers.utils.formatUnits(
         gameStartedConfirmation.events[0].args.gameId,
         0
       );
       this.confirmedGameMaxPlayers = ethers.utils.formatUnits(
         gameStartedConfirmation.events[0].args.maxPlayers,
+        0
+      );
+
+      this.confirmedGameEntryFee = ethers.utils.formatUnits(
+        gameStartedConfirmation.events[0].args.entryfee,
         0
       );
 

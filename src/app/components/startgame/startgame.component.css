@@ -1,0 +1,44 @@
+.main-container{
+    text-align: center;
+    height: 100%;
+    z-index: 0;
+    position: relative;
+    background-color:black;
+    color:aqua
+}
+
+.form-container{
+    position: relative;
+    text-align: center;
+    top: 20%;
+}
+
+.text-container{
+    position: relative;
+    top: 10%;
+    height: 15%;
+   
+}
+
+.main-heading{
+    font-size: 50px;
+    font-weight: 300;
+}
+
+.sub-heading{
+    top: 40%;
+    position: relative;
+    font-size: 25px;
+    font-weight: 300;
+}
+
+.form-field{
+    position: relative;
+    padding: 20%;
+}
+
+.modal-container{
+    z-index: 1;
+}
+
+

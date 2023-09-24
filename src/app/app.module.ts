@@ -15,6 +15,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { walletReducer } from './reducers';
+import { ActiveGameComponentComponent } from './components/active-game-component/active-game-component.component';
+import { JoinGameComponentComponent } from './components/join-game-component/join-game-component.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { walletReducer } from './reducers';
     HeaderComponent,
     StartgameComponent,
     GamestartedmodalComponent,
+    ActiveGameComponentComponent,
+    JoinGameComponentComponent,
   ],
   imports: [
     BrowserModule,
