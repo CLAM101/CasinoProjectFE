@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gamestartedmodal',
@@ -12,7 +13,7 @@ export class GamestartedmodalComponent implements OnInit {
 
   @Output() closeEvent = new EventEmitter();
 
-  constructor() {}
+  constructor(public router: Router) {}
 
   ngOnInit(): void {}
 

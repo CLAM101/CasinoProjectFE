@@ -1,1 +1,55 @@
-<p>join-game-component works!</p>
+<div class="main-container">
+    <ng-container *ngIf="gameFound && tokenApproved" class="join-game-container">
+        <div class="text-container">
+            <h1 class="main-heading">Join a game here</h1>
+            <h1 class="sub-heading" >Please enter your game Id and click the join button to join an existing game</h1>
+       
+
+            
+                <h1> Game Id {{foundGameGameId}}</h1>
+                <h1>Entry Fee {{foundGameEntryFeeConverted}}</h1>
+
+                <button (click)="joinGame()"  mat-raised-button color="accent">Join Game</button>
+         
+
+        </div>
+    </ng-container>
+
+<ng-container *ngIf="gameFound && !tokenApproved">
+
+    <div class="token-approve-container" >
+      <div class="token-approve-text">
+    <h1 class="main-heading" >Please Approve the entry fee</h1>
+    <h2 class="sub-heading" >Entry Fee is $CLT {{foundGameEntryFeeConverted}} </h2>
+  </div>
+   
+ <button (click)="approveSpend()" class="approve-button"  mat-raised-button color="accent">Approve Tokens</button>
+</div>
+</ng-container>
+
+<!-- Find a game -->
+    <ng-container *ngIf="!gameFound " >
+
+        <div class="find-game-container">
+        <div class="text-container">
+            <h1 class="main-heading">Find Your Game</h1>
+            <h1 class="sub-heading" >Please enter your game Id and click find, to find your game</h1>
+            </div>
+
+     
+        <div class="form-container" > 
+            <form [formGroup]="findGameForm" (ngSubmit)="findGame()" class="example-form">
+                
+              <div>
+                <mat-form-field class="example-full-width">
+                  <mat-label class="label">Game Id</mat-label>
+                  <input  type="text" formControlName="gameId" matInput>
+                </mat-form-field>
+              </div>
+    
+              <button class="submit-button"  mat-raised-button color="accent">Find Game</button>
+            </form>
+            </div>
+        </div>
+        </ng-container>
+</div>

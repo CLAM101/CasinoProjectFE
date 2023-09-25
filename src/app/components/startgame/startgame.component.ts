@@ -54,7 +54,7 @@ export class StartgameComponent implements OnInit {
     try {
       const startGameTx = await this.casinoMethodCaller.startGame(
         this.startGameForm.value.maxPlayers,
-        this.startGameForm.value.entryFee
+        ethers.utils.parseEther(this.startGameForm.value.entryFee)
       );
 
       const gameStartedConfirmation = await startGameTx.wait();
@@ -63,6 +63,7 @@ export class StartgameComponent implements OnInit {
         gameStartedConfirmation.events[0].args.gameId,
         0
       );
+
       this.confirmedGameMaxPlayers = ethers.utils.formatUnits(
         gameStartedConfirmation.events[0].args.maxPlayers,
         0

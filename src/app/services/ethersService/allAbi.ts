@@ -138,6 +138,12 @@ export const casinoAbi = [
         name: 'randomWords',
         type: 'uint256[]',
       },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'gameId',
+        type: 'uint256',
+      },
     ],
     name: 'RequestFulfilled',
     type: 'event',
@@ -157,6 +163,12 @@ export const casinoAbi = [
         name: 'numwords',
         type: 'uint32',
       },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'gameId',
+        type: 'uint256',
+      },
     ],
     name: 'RequestSent',
     type: 'event',
@@ -164,6 +176,62 @@ export const casinoAbi = [
   {
     stateMutability: 'payable',
     type: 'fallback',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_gameId',
+        type: 'uint256',
+      },
+    ],
+    name: 'checkForActiveSession',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'gameId',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address',
+            name: 'creator',
+            type: 'address',
+          },
+          {
+            internalType: 'bool',
+            name: 'isActive',
+            type: 'bool',
+          },
+          {
+            internalType: 'uint256',
+            name: 'maxPlayers',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'entryFee',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address[]',
+            name: 'players',
+            type: 'address[]',
+          },
+          {
+            internalType: 'uint256',
+            name: 'currentPot',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct Casino.Game',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
@@ -192,51 +260,43 @@ export const casinoAbi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'entryfee',
-    outputs: [
+    inputs: [
       {
         internalType: 'uint256',
         name: '',
         type: 'uint256',
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'gameId',
+    name: 'games',
     outputs: [
       {
         internalType: 'uint256',
-        name: '',
+        name: 'gameId',
         type: 'uint256',
       },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'gameStarted',
-    outputs: [
+      {
+        internalType: 'address',
+        name: 'creator',
+        type: 'address',
+      },
       {
         internalType: 'bool',
-        name: '',
+        name: 'isActive',
         type: 'bool',
       },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'getCurrentPot',
-    outputs: [
       {
         internalType: 'uint256',
-        name: '',
+        name: 'maxPlayers',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'entryFee',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'currentPot',
         type: 'uint256',
       },
     ],
@@ -244,13 +304,38 @@ export const casinoAbi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'getPlayers',
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_gameId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getPlayersById',
     outputs: [
       {
         internalType: 'address[]',
         name: '',
         type: 'address[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_gameId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getPotById',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -276,6 +361,11 @@ export const casinoAbi = [
         name: 'randomWords',
         type: 'uint256[]',
       },
+      {
+        internalType: 'uint256',
+        name: 'gameId',
+        type: 'uint256',
+      },
     ],
     stateMutability: 'view',
     type: 'function',
@@ -287,6 +377,11 @@ export const casinoAbi = [
         name: '_amount',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: '_gameId',
+        type: 'uint256',
+      },
     ],
     name: 'joinGame',
     outputs: [],
@@ -296,19 +391,6 @@ export const casinoAbi = [
   {
     inputs: [],
     name: 'lastRequestId',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'maxPlayers',
     outputs: [
       {
         internalType: 'uint256',
@@ -340,7 +422,7 @@ export const casinoAbi = [
         type: 'uint256',
       },
     ],
-    name: 'players',
+    name: 'pastWinners',
     outputs: [
       {
         internalType: 'address',
@@ -384,19 +466,6 @@ export const casinoAbi = [
   },
   {
     inputs: [],
-    name: 'recentWinner',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
     name: 'renounceOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -424,25 +493,6 @@ export const casinoAbi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 's_playerNumbers',
-    outputs: [
-      {
-        internalType: 'uint32',
-        name: '',
-        type: 'uint32',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'uint256',
         name: '',
         type: 'uint256',
@@ -459,6 +509,11 @@ export const casinoAbi = [
         internalType: 'bool',
         name: 'fulfilled',
         type: 'bool',
+      },
+      {
+        internalType: 'uint256',
+        name: 'gameId',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',

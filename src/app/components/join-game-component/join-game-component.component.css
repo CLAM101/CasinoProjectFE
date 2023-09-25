@@ -1,0 +1,52 @@
+.main-container{
+    text-align: center;
+    position: relative;
+    background-color: black;
+    height: 100%;
+    color: aqua;
+}
+
+.form-container{
+    position: relative;
+    top: 15%;
+}
+.text-container{
+    position: relative;
+    text-align: center;
+    top: 10%;
+}
+
+.main-heading{
+    position: relative;
+    font-size: 50px;
+    padding: 2%;
+    font-weight: 300;
+}
+.sub-heading{
+    font-size: 25px;
+    padding: 2%;
+    font-weight: 300;
+}
+
+.find-game-container{
+height: 80%;
+position: relative;
+text-align: center;
+top:10%
+
+}
+
+.token-approve-container{
+    height: 80%;
+    position: relative;
+    text-align: center;
+    top: 10%;
+    
+}
+
+button{
+    font-size: 18px;
+    top: 5%;
+    width: 300px;
+    height: 150px;
+}

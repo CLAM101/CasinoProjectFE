@@ -11,6 +11,6 @@
         <h2 class="started-text"> Max Players {{maxPlayers}}</h2>
     </div>
 </div>
-    <button class="to-game-btn" mat-raised-button color="accent" > Go to Your Game</button>
+    <button (click)="router.navigate(['/joingame'])" class="to-game-btn" mat-raised-button color="accent" > Go to Your Game</button>
     <button (click)="closeModal()" class="close-modal-btn" mat-raised-button color="accent">Close</button>
 </div>
