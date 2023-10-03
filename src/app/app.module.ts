@@ -14,9 +14,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
-import { walletReducer } from './reducers';
+import { reducers } from './reducers/reducers';
 import { ActiveGameComponentComponent } from './components/active-game-component/active-game-component.component';
 import { JoinGameComponentComponent } from './components/join-game-component/join-game-component.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,12 @@ import { JoinGameComponentComponent } from './components/join-game-component/joi
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot(walletReducer, {}),
+    StoreModule.forRoot({ casinoState: reducers }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: true, // Restrict extension to log-only mode
+      trace: true,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

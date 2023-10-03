@@ -1,3 +1,20 @@
 <div class="main-container">
 
+   <div class="game-status">
+<h1 class="game-status-text"> Game ID:  {{currentGameId}}</h1>
+<h1 class="game-status-text"> Game Status:  {{currentGameStatus ? 'Active' : 'completed'}}</h1>
+<h1 class="game-status-text"> Set Maximum Players:  {{currentMaxPlayers}}</h1>
+<h1 class="game-status-text"> Current Pot $CLT {{currentPot}}</h1>
+
+<h1 class="game-status-text" *ngIf="currentWinnerAddress" > And the Winner is {{currentWinnerAddress}}</h1>
+
+   </div>
+
+    <div class="player-list" >
+
+        <h1 class="player-list-heading">Players In game</h1>
+     
+        <li class="list-item" *ngFor="let player of currentPlayers" >{{player}}</li>
+ 
+    </div>
 </div>

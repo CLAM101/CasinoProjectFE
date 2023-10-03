@@ -1,9 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Form, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { EthersService } from 'src/app/services/ethersService/ethersService';
 import { Router } from '@angular/router';
 import { ethers } from 'ethers';
 import { casino } from 'src/app/services/ethersService/contracts';
+import { initializeGame, gameStarted } from 'src/app/reducers/actions';
+import { Store } from '@ngrx/store';
+import { selectGameId } from 'src/app/reducers/selectors';
+import { Observable, Subscriber, take } from 'rxjs';
+
+import { CasinoState } from 'src/app/reducers/reducers';
+import { ActivegameserviceService } from 'src/app/services/activegameservice/activegameservice.service';
 
 @Component({
   selector: 'app-join-game-component',
@@ -22,16 +29,29 @@ export class JoinGameComponentComponent implements OnInit {
   foundGameGameId: string;
   tokenApproved: boolean;
   tokenContract: any;
+  gameId$: Observable<string>;
+  currentGameId: string;
+  count = 0;
 
   constructor(
     private formBuilder: FormBuilder,
     private ethersService: EthersService,
-    public router: Router
+    public router: Router,
+    private store: Store<CasinoState>,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.provider = this.ethersService.getProvider();
     await this.connectContracts();
+
+    this.gameId$ = this.store.select(selectGameId);
+
+    this.gameId$.subscribe((gameIdValue: string) => {
+      console.log('gameId yeah', gameIdValue);
+      this.currentGameId = gameIdValue;
+      this.changeDetector.detectChanges();
+    });
   }
   joinGameForm = this.formBuilder.group({
     gameId: this.formBuilder.control<string>('', Validators.required),
@@ -47,6 +67,8 @@ export class JoinGameComponentComponent implements OnInit {
       const confirmedGameJoin = await joinGameTx.wait();
 
       console.log('join game success confirmation', confirmedGameJoin);
+
+      this.initializeGameInStore(this.foundGameGameId);
 
       this.router.navigate(['/activegame']);
     } catch (err) {
@@ -70,7 +92,6 @@ export class JoinGameComponentComponent implements OnInit {
   });
 
   async findGame() {
-    console.log('game id in arg', this.findGameForm.value.gameId);
     try {
       const findGameTx = await this.casinoMethodCaller.checkForActiveSession(
         this.findGameForm.value.gameId
@@ -83,6 +104,7 @@ export class JoinGameComponentComponent implements OnInit {
       }
 
       if (this.isPlayerInGame(findGameTx.players)) {
+        this.initializeGameInStore(this.findGameForm.value.gameId);
         this.router.navigate(['/activegame']);
         return;
       }
@@ -112,6 +134,10 @@ export class JoinGameComponentComponent implements OnInit {
     }
 
     return false;
+  }
+
+  initializeGameInStore(gameId: string) {
+    this.store.dispatch(initializeGame({ gameId: gameId }));
   }
 
   async approveSpend() {
