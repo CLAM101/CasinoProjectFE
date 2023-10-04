@@ -66,8 +66,6 @@ export class JoinGameComponentComponent implements OnInit {
       );
       const confirmedGameJoin = await joinGameTx.wait();
 
-      console.log('join game success confirmation', confirmedGameJoin);
-
       this.initializeGameInStore(this.foundGameGameId);
 
       this.router.navigate(['/activegame']);
