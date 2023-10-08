@@ -96,7 +96,7 @@ export class JoinGameComponentComponent implements OnInit {
       );
 
       if (!findGameTx.isActive) {
-        alert('Sorry this game is no longer active');
+        alert('Sorry this game is no longer active anymore');
 
         return;
       }
