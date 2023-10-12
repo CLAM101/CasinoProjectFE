@@ -71,7 +71,14 @@ export class ActivegameserviceService {
 
     contract.on(
       'RequestFulfilled(uint256 requestId, uint256[] randomWords, uint256 gameId)',
-      (requestId, randomWords, gameId) => {}
+      (requestId, randomWords, gameId) => {
+        console.log(
+          'request fulfilled fired',
+          requestId,
+          randomWords,
+          ethers.utils.formatUnits(gameId)
+        );
+      }
     );
 
     contract.on(

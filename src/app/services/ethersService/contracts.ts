@@ -1,2 +1,2 @@
-export const casino = '0x969E8B72C689E065F31BDadB06379Fc671200690';
-export const token = '0xCEF0F7B111f5eBFA005BCEb3CC248c175aCBa714';
+export const casino = '0x675485c575C516c6b2C61325e558a7911C2DDB3d';
+export const token = '0x090aE9603e022C127eC3b2428b751ba2055dEb41';
