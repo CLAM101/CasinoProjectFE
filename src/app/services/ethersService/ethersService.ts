@@ -3,17 +3,15 @@ import { ethers, BigNumber } from 'ethers';
 import { casinoAbi, tokenAbi } from './allAbi';
 import { casino, token } from './contracts';
 import { Provider } from '@ethersproject/providers';
-import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { CasinoEvent } from 'types/general';
+import { GeneralutilsService } from '../generalutils/generalutils.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EthersService {
-  private eventSubject: Subject<CasinoEvent> = new Subject<CasinoEvent>();
-
-  constructor(private store: Store) {}
+  constructor(private generalUtils: GeneralutilsService) {}
 
   getProvider(): Provider {
     return new ethers.providers.Web3Provider(window.ethereum);
@@ -32,7 +30,7 @@ export class EthersService {
     try {
       await provider.send('eth_requestAccounts', []);
     } catch (err) {
-      alert('Failed To Connect Wallet');
+      this.generalUtils.openSnackBar('Please connect wallet');
     }
   }
 }

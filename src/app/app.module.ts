@@ -18,8 +18,8 @@ import { reducers } from './reducers/reducers';
 import { ActiveGameComponentComponent } from './components/active-game-component/active-game-component.component';
 import { JoinGameComponentComponent } from './components/join-game-component/join-game-component.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { provideStore } from '@ngrx/store';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -40,6 +40,8 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
     MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
     StoreModule.forRoot({ casinoState: reducers }),

@@ -17,4 +17,19 @@
         <li class="list-item" *ngFor="let player of currentPlayers" >{{player}}</li>
  
     </div>
+
+    <!--  -->
+
+   
+  
+
+</div>
+
+<div *ngIf="choosingWinner$ | async " class="loading-container" >  
+    <mat-progress-spinner class="winner-loading"   [mode]="'indeterminate'"></mat-progress-spinner>
+
+    <div class="winner-text">
+        <h1 class="winner-heading">Selecting A Random Winner </h1>
+    </div>
+  
 </div>

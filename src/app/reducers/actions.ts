@@ -20,7 +20,17 @@ export const requestFulfilled = createAction(
   props<{ requestId: string; randomWords: string[]; gameId: string }>()
 );
 
+export const requestSent = createAction(
+  '[Casino] Request Sent',
+  props<{ requestId: string; numWords: string; gameId: string }>()
+);
+
 export const gameEnded = createAction(
+  '[Casino] Game Ended',
+  props<{ gameId: string; winnerAddress: string }>()
+);
+
+export const clearGameData = createAction(
   '[Casino] Game Ended',
   props<{ gameId: string; winnerAddress: string }>()
 );

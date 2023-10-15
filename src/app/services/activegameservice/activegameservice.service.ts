@@ -13,14 +13,20 @@ import {
   playerJoined,
   requestFulfilled,
   gameEnded,
+  requestSent,
 } from 'src/app/reducers/actions';
+import { GeneralutilsService } from '../generalutils/generalutils.service';
 @Injectable({
   providedIn: 'root',
 })
 export class ActivegameserviceService {
   private eventSubject: Subject<CasinoEvent> = new Subject<CasinoEvent>();
 
-  constructor(private ethersService: EthersService, private store: Store) {}
+  constructor(
+    private ethersService: EthersService,
+    private store: Store,
+    private generalUtils: GeneralutilsService
+  ) {}
 
   gameId$;
   currentGameId: string;
@@ -66,18 +72,42 @@ export class ActivegameserviceService {
 
     contract.on(
       'RequestSent(uint256 requestId, uint32 numwords, uint256 gameId)',
-      (requestId, numwords, gameId) => {}
+      (requestId, numwords, gameId) => {
+        if (ethers.utils.formatUnits(gameId, 0) == this.currentGameId) {
+          this.generalUtils.openSnackBar(
+            'Max Players Reached, A winner is being chosen'
+          );
+
+          const convertedNumwords = ethers.utils.formatUnits(numwords, 0);
+          const convertedRequestId = ethers.utils.formatUnits(requestId, 0);
+
+          const args = {
+            gameId: ethers.utils.formatUnits(gameId, 0),
+            numWords: convertedNumwords,
+            requestId: convertedRequestId,
+          };
+
+          this.store.dispatch(requestSent(args));
+        }
+      }
     );
 
     contract.on(
       'RequestFulfilled(uint256 requestId, uint256[] randomWords, uint256 gameId)',
       (requestId, randomWords, gameId) => {
-        console.log(
-          'request fulfilled fired',
-          requestId,
-          randomWords,
-          ethers.utils.formatUnits(gameId)
-        );
+        const convertedRandomWords = randomWords.map((word) => {
+          return ethers.utils.formatUnits(word, 0);
+        });
+
+        const convertedRequestId = ethers.utils.formatUnits(requestId, 0);
+
+        const args = {
+          gameId: ethers.utils.formatUnits(gameId, 0),
+          randomWords: convertedRandomWords,
+          requestId: convertedRequestId,
+        };
+
+        this.store.dispatch(requestFulfilled(args));
       }
     );
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EthersService } from 'src/app/services/ethersService/ethersService';
-import { ethers } from 'ethers';
 import { Router } from '@angular/router';
+import { GeneralutilsService } from 'src/app/services/generalutils/generalutils.service';
 
 @Component({
   selector: 'app-header',
@@ -16,17 +16,18 @@ export class HeaderComponent implements OnInit {
   accounts: Array<string>;
   walletConnected: boolean;
 
-  constructor(private ethersService: EthersService, public router: Router) {}
+  constructor(
+    private ethersService: EthersService,
+    public router: Router,
+    private generalUtils: GeneralutilsService
+  ) {}
   async ngOnInit(): Promise<void> {
     this.provider = this.ethersService.getProvider();
+    this.onNetworkChanged();
     if (window.ethereum.selectedAddress && window.ethereum.isConnected()) {
       await this.connectContracts();
-      const supply = await this.tokenMethodCaller.getCurrentSupply();
-      const convertedSupply = ethers.utils.formatUnits(supply, 18);
-
-      console.log('supply', convertedSupply);
     } else {
-      alert('please connect wallet');
+      this.generalUtils.openSnackBar('Please connect wallet');
     }
   }
 
@@ -36,27 +37,47 @@ export class HeaderComponent implements OnInit {
     this.tokenMethodCaller = this.tokenContract.connect(this.signer);
   }
 
+  //capture the event emitted when suer changes network and log which network user changed to
+  async onNetworkChanged() {
+    window.ethereum.on('chainChanged', (chainId) => {
+      chainId = parseInt(chainId, 16);
+
+      if (chainId !== 1337) {
+        this.generalUtils.openSnackBar('Please change to the correct network');
+        this.changeNetwork();
+      }
+    });
+  }
+
+  //promt user to change networks if they are not on the correct network
+  async changeNetwork() {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x539' }],
+    });
+  }
+
   async claimAllocation() {
     if (window.ethereum.selectedAddress) {
       try {
-        let tx = await this.tokenMethodCaller.claimAllocation();
+        const tx = await this.tokenMethodCaller.claimAllocation();
 
-        let confirmation = await tx.wait();
-        console.log('Confirmation', confirmation);
-        alert('Claim Successful, go join a game!');
+        await tx.wait();
+
+        this.generalUtils.openSnackBar('Claim Successful, go join a game!');
       } catch (err) {
         if (err.reason?.includes('Already Claimed')) {
-          alert(
-            'Sorry looks like you have already claimed you greedy bastard!!!'
+          this.generalUtils.openSnackBar(
+            'Sorry you have already claimed you greedy bastard!!!'
           );
         } else {
-          alert(
+          this.generalUtils.openSnackBar(
             'your transactions has failed please try again or contact us for support'
           );
         }
       }
     } else {
-      alert('Please connect wallet');
+      this.generalUtils.openSnackBar('Please connect wallet');
     }
   }
 

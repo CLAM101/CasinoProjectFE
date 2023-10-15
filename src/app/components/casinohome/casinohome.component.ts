@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EthersService } from 'src/app/services/ethersService/ethersService';
 import { ethers } from 'ethers';
+import { GeneralutilsService } from 'src/app/services/generalutils/generalutils.service';
 
 declare global {
   interface Window {
@@ -24,18 +25,17 @@ export class CasinohomeComponent implements OnInit {
   accounts: Array<string>;
   walletConnected: boolean;
 
-  constructor(private ethersService: EthersService, private router: Router) {}
+  constructor(
+    private ethersService: EthersService,
+    private generalUtils: GeneralutilsService
+  ) {}
 
   async ngOnInit() {
     this.provider = this.ethersService.getProvider();
     if (await this.checkConnection()) {
       await this.connectContracts();
-      const supply = await this.tokenMethodCaller.getCurrentSupply();
-      const convertedSupply = ethers.utils.formatUnits(supply, 18);
-
-      console.log('supply', convertedSupply);
     } else {
-      alert('please connect wallet');
+      this.generalUtils.openSnackBar('Please connect wallet');
     }
   }
 
@@ -55,28 +55,28 @@ export class CasinohomeComponent implements OnInit {
 
   async checkConnection() {
     try {
-      const conenctResponse = await this.provider.send(
+      const connectResponse = await this.provider.send(
         'eth_requestAccounts',
         []
       );
 
       this.walletConnected = true;
 
-      return conenctResponse;
+      return connectResponse;
     } catch (err) {
-      alert('Pleae connect Wallet');
+      this.generalUtils.openSnackBar('Please connect wallet');
       this.walletConnected = false;
       return undefined;
     }
   }
 
   async connectWallet() {
-    const walletConenctResponse = await this.provider.send(
+    const walletConnectResponse = await this.provider.send(
       'eth_requestAccounts',
       []
     );
 
-    if (walletConenctResponse.length) {
+    if (walletConnectResponse.length) {
       this.walletConnected = true;
     }
   }

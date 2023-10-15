@@ -4,13 +4,12 @@ import { EthersService } from 'src/app/services/ethersService/ethersService';
 import { Router } from '@angular/router';
 import { ethers } from 'ethers';
 import { casino } from 'src/app/services/ethersService/contracts';
-import { initializeGame, gameStarted } from 'src/app/reducers/actions';
+import { initializeGame } from 'src/app/reducers/actions';
 import { Store } from '@ngrx/store';
 import { selectGameId } from 'src/app/reducers/selectors';
-import { Observable, Subscriber, take } from 'rxjs';
-
+import { Observable } from 'rxjs';
 import { CasinoState } from 'src/app/reducers/reducers';
-import { ActivegameserviceService } from 'src/app/services/activegameservice/activegameservice.service';
+import { GeneralutilsService } from 'src/app/services/generalutils/generalutils.service';
 
 @Component({
   selector: 'app-join-game-component',
@@ -38,7 +37,8 @@ export class JoinGameComponentComponent implements OnInit {
     private ethersService: EthersService,
     public router: Router,
     private store: Store<CasinoState>,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private generalUtils: GeneralutilsService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -48,7 +48,6 @@ export class JoinGameComponentComponent implements OnInit {
     this.gameId$ = this.store.select(selectGameId);
 
     this.gameId$.subscribe((gameIdValue: string) => {
-      console.log('gameId yeah', gameIdValue);
       this.currentGameId = gameIdValue;
       this.changeDetector.detectChanges();
     });
@@ -64,24 +63,25 @@ export class JoinGameComponentComponent implements OnInit {
         this.foundGameEntryFee,
         this.foundGameGameId
       );
-      const confirmedGameJoin = await joinGameTx.wait();
+      await joinGameTx.wait();
 
       this.initializeGameInStore(this.foundGameGameId);
 
       this.router.navigate(['/activegame']);
     } catch (err) {
       console.log('Join Game error', err);
-      if (err.reason?.includes('Game is not active')) {
-        alert('There is no active game for your provided Id');
-      } else if (err.reason.includes('Maximum players already joined')) {
-        alert('Sorry max players have already joined');
-      } else if (err.reason.includes('Bet amount does not equal entry fee')) {
-        alert('Please provide the correct entry fee');
-      } else {
-        alert(
+      if (err.reason?.includes('Game is not active'))
+        this.generalUtils.openSnackBar(
+          'There is no active game for your provided Id'
+        );
+      if (err.reason.includes('Maximum players already joined'))
+        this.generalUtils.openSnackBar('Sorry max players have already joined');
+      if (err.reason.includes('Bet amount does not equal entry fee'))
+        this.generalUtils.openSnackBar('Please provide the correct entry fee');
+      else
+        this.generalUtils.openSnackBar(
           'Transaction Failed without reason, try again or contact support'
         );
-      }
     }
   }
 
@@ -96,7 +96,9 @@ export class JoinGameComponentComponent implements OnInit {
       );
 
       if (!findGameTx.isActive) {
-        alert('Sorry this game is no longer active anymore');
+        this.generalUtils.openSnackBar(
+          'Sorry this game is no longer active anymore or does not exist'
+        );
 
         return;
       }
@@ -113,12 +115,20 @@ export class JoinGameComponentComponent implements OnInit {
         18
       );
       this.foundGameGameId = ethers.utils.formatUnits(findGameTx.gameId, 0);
+
+      const currentPlayerAllowance = await this.tokenMethodCaller.allowance(
+        window.ethereum.selectedAddress,
+        casino
+      );
+
+      if (currentPlayerAllowance >= this.foundGameEntryFee)
+        this.tokenApproved = true;
+
       this.gameFound = true;
     } catch (err) {
-      alert(
+      this.generalUtils.openSnackBar(
         'sorry we had some trouble finding your game, try again or contact support'
       );
-      console.log('find game error', err);
     }
   }
 
@@ -147,12 +157,13 @@ export class JoinGameComponentComponent implements OnInit {
 
       await approvalTx.wait();
 
-      alert('Tokens Approved');
+      this.generalUtils.openSnackBar('Tokens Approved');
 
       this.tokenApproved = true;
     } catch (err) {
-      console.log('error', err);
-      alert('There was an error please try again or contact support');
+      this.generalUtils.openSnackBar(
+        'There was an error please try again or contact support'
+      );
     }
   }
 

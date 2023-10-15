@@ -44,3 +44,9 @@ export const selectWinnerAddress = createSelector(
   casinoState,
   (state: CasinoState) => state.winnerAddress
 );
+
+// Select the choosingWinner from state
+export const selectChoosingWinner = createSelector(
+  casinoState,
+  (state: CasinoState) => state.choosingWinner
+);

@@ -9,6 +9,7 @@ export interface CasinoState {
   requestId: string | null;
   randomWords: string[] | null;
   winnerAddress: string | null;
+  choosingWinner: boolean;
 }
 
 export const initialState: CasinoState = {
@@ -19,6 +20,7 @@ export const initialState: CasinoState = {
   requestId: null,
   randomWords: null,
   winnerAddress: null,
+  choosingWinner: false,
 };
 
 const reducer = createReducer(
@@ -28,7 +30,6 @@ const reducer = createReducer(
     gameId,
   })),
   on(CasinoActions.gameStarted, (state, { gameId, maxPlayers, entryFee }) => {
-    console.log('game started fired');
     return {
       ...state,
       gameId,
@@ -54,6 +55,12 @@ const reducer = createReducer(
     ...state,
     gameId,
     winnerAddress,
+    choosingWinner: false,
+  })),
+
+  on(CasinoActions.requestSent, (state, { requestId, numWords, gameId }) => ({
+    ...state,
+    choosingWinner: true,
   }))
 );
 

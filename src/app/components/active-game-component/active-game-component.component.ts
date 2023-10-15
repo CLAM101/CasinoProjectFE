@@ -10,11 +10,14 @@ import {
   selectPlayerAddress,
   selectRequestId,
   selectWinnerAddress,
+  selectChoosingWinner,
 } from 'src/app/reducers/selectors';
 import { Store } from '@ngrx/store';
 import { CasinoState } from 'src/app/reducers/reducers';
 import { ethers } from 'ethers';
 import { Router } from '@angular/router';
+import { clearGameData } from 'src/app/reducers/actions';
+import { GeneralutilsService } from 'src/app/services/generalutils/generalutils.service';
 
 @Component({
   selector: 'app-active-game-component',
@@ -45,13 +48,15 @@ export class ActiveGameComponentComponent implements OnInit {
   playerAddress$: Observable<string>;
   requestId$: Observable<string>;
   winnerAddress$: Observable<string>;
+  choosingWinner$: Observable<boolean>;
   private subscriptions: Subscription[] = [];
 
   constructor(
     private ethersService: EthersService,
     private activeGameService: ActivegameserviceService,
     private store: Store<CasinoState>,
-    private router: Router
+    private router: Router,
+    private generalUtils: GeneralutilsService
   ) {}
 
   async ngOnInit() {
@@ -73,6 +78,9 @@ export class ActiveGameComponentComponent implements OnInit {
     this.playerAddress$ = this.store.select(selectPlayerAddress);
     this.requestId$ = this.store.select(selectRequestId);
     this.winnerAddress$ = this.store.select(selectWinnerAddress);
+
+    this.choosingWinner$ = this.store.select(selectChoosingWinner);
+
     this.subscriptions.push(
       this.gameId$.subscribe((gameIdValue: string) => {
         if (!gameIdValue) return;
@@ -96,7 +104,9 @@ export class ActiveGameComponentComponent implements OnInit {
         this.latestJoinedPlayer = playerAddressValue;
         if (!playerAddressValue) return;
 
-        alert('Player Joined' + this.latestJoinedPlayer);
+        this.generalUtils.openSnackBar(
+          'Player Joined' + this.latestJoinedPlayer
+        );
         await this.getGameData();
       })
     );
@@ -147,6 +157,10 @@ export class ActiveGameComponentComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.store.dispatch(
+      clearGameData({ gameId: undefined, winnerAddress: undefined })
+    );
+
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

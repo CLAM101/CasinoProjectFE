@@ -25,7 +25,41 @@
 }
 
 .game-status-text{
-    padding-top: 2%;
+    padding-top: 3%;
     position: relative;
     font-size: 25px;
+}
+
+
+
+
+.winner-loading{
+  text-align: center;
+    position: relative;
+    top: 20%;
+    font-size: 25px;
+    left: 40%
+
+}
+
+.winner-text{
+    position: relative;
+   top: 35%;
+  
+}
+
+.winner-heading{
+    font-size: 25px;
+    font-weight: 900;
+}
+.loading-container{
+    top:17%;
+    text-align: center;
+    background-color: aqua;
+  position:absolute;
+
+left: 37%;
+width: 25%;
+height: 50%;
+
 }
