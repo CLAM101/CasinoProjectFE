@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit {
     window.ethereum.on('chainChanged', (chainId) => {
       chainId = parseInt(chainId, 16);
 
-      if (chainId !== 1337) {
+      if (chainId !== 5) {
         this.generalUtils.openSnackBar('Please change to the correct network');
         this.changeNetwork();
       }
@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
   async changeNetwork() {
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: '0x539' }],
+      params: [{ chainId: '0x5' }],
     });
   }
 
